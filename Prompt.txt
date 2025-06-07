@@ -1,0 +1,46 @@
+Here are the main prompts that guided the development of this polling tool:
+
+1. Initial Project Request:
+   "Build a lightweight web-based polling tool using HTML, CSS (Tailwind), JavaScript (vanilla ES6+), Python Flask for the backend, in-memory data storage, and Chart.js for visualization. Include specific project requirements, structure, user flow, file/folder structure, and functional expectations."
+
+2. Core Features Specification:
+   "Users should be able to create a poll with a question and 2 to 5 answer options. Include functionality to submit votes, view poll results, and display results as a bar chart using Chart.js. Add measures to prevent duplicate voting (e.g., simulated user IDs)."
+
+3. Frontend UI Requirements:
+   "Detail frontend UI requirements for a clean and minimal interface, a poll creation form with validations (2-5 options), a vote submission form (radio buttons), a result display after voting (chart and vote count), and a responsive design."
+
+4. Backend API Requirements:
+   "Specify backend requirements for the API, including endpoints for fetching polls, creating polls, and submitting votes, along with input validation and error handling."
+
+5. UI/UX Enhancements:
+   "Request enhancements to the UI, specifically focusing on adding smooth animations and improving user-friendliness, loading indicators, toast notifications, search, and sort functionality."
+
+6. Sample Data Modification:
+   "Remove all default polls and retain only a color poll."
+
+7. Admin and Delete Functionality:
+   "Add admin login functionality and delete poll button with working implementation."
+
+8. Export Functionality:
+   "Add export button to export poll data in CSV format."
+
+9. Admin Credentials Update:
+   "Update admin login credentials to use 'admin' for both username and password."
+
+10. Data Storage Implementation:
+    "Implement file-based JSON storage system for polls and votes in a data directory, with separate files for polls and voting records."
+
+11. Admin Credentials: username='admin', password='admin'
+
+12. Data Storage: JSON files (polls.json and votes.json) in backend/data directory
+
+13. Duplicate Vote Prevention: Using IP + User-Agent combination
+
+14. Export Format: CSV with poll questions, options, vote counts, and creation timestamps
+
+15. Sample Data: Single color poll on first run if no polls exist
+
+
+for run the app: 1. cd poll-app
+ .\venv\Scripts\activate
+    2. python backend/app.py

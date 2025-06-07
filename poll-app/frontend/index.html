@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poll App</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Custom styles */
+        :root {
+            --primary-color: #4F46E5;
+            --secondary-color: #818CF8;
+            --accent-color: #C7D2FE;
+            --text-color: #1F2937;
+            --bg-color: #F9FAFB;
+            --card-bg: #FFFFFF;
+            --border-color: #E5E7EB;
+            --hover-bg: #F3F4F6;
+            --active-bg: #E5E7EB;
+        }
+
+        .dark-theme {
+            --primary-color: #818CF8;
+            --secondary-color: #4F46E5;
+            --accent-color: #312E81;
+            --text-color: #F9FAFB;
+            --bg-color: #111827;
+            --card-bg: #1F2937;
+            --border-color: #374151;
+            --hover-bg: #1F2937;
+            --active-bg: #374151;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-family: sans-serif;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px -2px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-outline {
+            border-color: var(--border-color);
+            color: var(--text-color);
+            background-color: transparent;
+        }
+
+         .btn-outline:hover {
+            background-color: var(--hover-bg);
+        }
+
+         .btn-outline:active {
+            background-color: var(--active-bg);
+        }
+
+        .progress-bar {
+            background-color: var(--primary-color);
+            transition: width 0.5s ease;
+        }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes slideInUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideOutDown { from { transform: translateY(0); opacity: 1; } to { transform: translateY(20px); opacity: 0; } }
+
+        .animate-fadeIn { animation: fadeIn 0.5s ease forwards; }
+        .animate-fadeOut { animation: fadeOut 0.5s ease forwards; }
+        .animate-slideInUp { animation: slideInUp 0.6s ease-out forwards; }
+        .animate-slideOutDown { animation: slideOutDown 0.6s ease-in forwards; }
+
+        /* Loading spinner */
+        .loading-spinner {
+            border: 3px solid var(--accent-color);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 50;
+            opacity: 0;
+        }
+         .toast.show { animation: slideInUp 0.5s ease-out forwards; }
+         .toast.hide { animation: slideOutDown 0.5s ease-in forwards; }
+
+        .toast.error { border-left: 4px solid #EF4444; color: #EF4444; }
+        .toast.success { border-left: 4px solid #10B981; color: #10B981; }
+        .toast.info { border-left: 4px solid #3B82F6; color: #3B82F6; }
+
+         .toast .close-btn { color: inherit; opacity: 0.7; }
+         .toast .close-btn:hover { opacity: 1; }
+
+        /* Search and filter styles */
+        .input-field, .select-field {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-field:focus, .select-field:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px var(--accent-color);
+        }
+
+        /* Textarea styles */
+        textarea.input-field {
+            min-height: 2.5rem;
+            line-height: 1.5;
+            resize: vertical;
+        }
+
+         #poll-question.input-field {
+            min-height: 3rem;
+            max-height: 8rem;
+            overflow-y: auto;
+        }
+
+        .option-input textarea.input-field {
+            height: 2.5rem;
+            overflow-y: hidden;
+        }
+
+        /* Form styles */
+        .form-group label {
+             font-weight: 500;
+             margin-bottom: 0.5rem;
+             display: block;
+             color: var(--text-color);
+        }
+
+         .form-group input[type="text"], .form-group textarea {
+             width: 100%;
+         }
+
+        /* Utility classes */
+        .hidden { display: none !important; }
+        .visible { display: block !important; }
+
+
+    </style>
+</head>
+<body class="min-h-screen antialiased">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
+                <i class="fas fa-poll-h mr-2"></i>
+                Poll App
+            </h1>
+            <div class="flex items-center space-x-4">
+                <button id="create-poll-btn" class="btn btn-primary">
+                    <i class="fas fa-plus mr-2"></i>
+                    <span>Create Poll</span>
+                </button>
+                 <button id="export-polls-btn" class="btn btn-outline">
+                    <i class="fas fa-file-csv mr-2"></i>
+                    <span>Export to CSV</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Admin Login Form (Hidden by default) -->
+        <div id="admin-login-form" class="hidden mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 max-w-sm mx-auto animate-fadeIn">
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">Admin Login</h2>
+            <form id="login-form" class="space-y-4">
+                <div class="form-group">
+                    <label for="admin-username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
+                    <input type="text" id="admin-username" name="username" required class="input-field">
+                </div>
+                <div class="form-group">
+                    <label for="admin-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                    <input type="password" id="admin-password" name="password" required class="input-field">
+                </div>
+                <button type="submit" class="btn btn-primary w-full mt-4">
+                    Login
+                </button>
+            </form>
+        </div>
+
+        <!-- Create Poll Form (Hidden by default) -->
+        <div id="create-poll-form" class="hidden mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 max-w-2xl mx-auto animate-fadeIn">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Create New Poll</h2>
+                <button id="cancel-create-poll" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <form id="new-poll-form" class="space-y-6">
+                <div class="form-group">
+                    <label for="poll-question" class="text-sm font-medium text-gray-700 dark:text-gray-300">Poll Question</label>
+                    <textarea id="poll-question" name="question" required rows="2"
+                        class="input-field"
+                        placeholder="Enter your poll question"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Poll Options (2-5 options)</label>
+                    <div id="options-container" class="space-y-3">
+                        <div class="option-input flex gap-2">
+                            <textarea name="options[]" required rows="1"
+                                class="input-field flex-1"
+                                placeholder="Option 1"></textarea>
+                        </div>
+                        <div class="option-input flex gap-2">
+                            <textarea name="options[]" required rows="1"
+                                class="input-field flex-1"
+                                placeholder="Option 2"></textarea>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex gap-2">
+                        <button type="button" id="add-option-btn" 
+                            class="btn btn-outline btn-sm">
+                            <i class="fas fa-plus"></i>
+                            <span>Add Option</span>
+                        </button>
+                        <button type="button" id="remove-option-btn" 
+                            class="btn btn-outline btn-sm hidden">
+                            <i class="fas fa-minus"></i>
+                            <span>Remove Option</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-4">
+                    <button type="button" id="cancel-create-poll" 
+                        class="btn btn-outline">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                        class="btn btn-primary">
+                        <i class="fas fa-check mr-2"></i>
+                        <span>Create Poll</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Search and filter -->
+        <div class="mb-8 flex flex-col sm:flex-row gap-4 animate-slideInUp">
+            <div class="flex-1">
+                <input type="text" id="search-polls" 
+                       class="input-field w-full"
+                       placeholder="Search polls...">
+            </div>
+            <div class="w-full sm:w-48">
+                <select id="sort-polls" class="select-field w-full">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="most_votes">Most Votes</option>
+                    <option value="least_votes">Least Votes</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Loading indicator -->
+        <div id="loading" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="loading-spinner"></div>
+        </div>
+
+        <!-- Poll list -->
+        <div id="poll-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Polls will be rendered here -->
+        </div>
+
+        <!-- Poll detail -->
+        <div id="poll-detail" class="hidden max-w-3xl mx-auto">
+            <!-- Poll details will be rendered here -->
+        </div>
+    </main>
+
+    <!-- Toast container -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col space-y-2"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/render.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 

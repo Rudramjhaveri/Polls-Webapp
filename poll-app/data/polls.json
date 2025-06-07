@@ -1,0 +1,32 @@
+{
+  "91c8c3b0-8899-4094-a9a6-ce67b70a1ecc": {
+    "question": "What is your favorite color?",
+    "options": [
+      "Red",
+      "Blue",
+      "Green",
+      "Yellow",
+      "Purple"
+    ],
+    "votes": [
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "created_at": "2025-06-06T14:51:58.441833"
+  },
+  "01099e51-ff82-44ea-b789-b4d6ac4af887": {
+    "question": "fav animal",
+    "options": [
+      "cow",
+      "dog"
+    ],
+    "votes": [
+      1,
+      0
+    ],
+    "created_at": "2025-06-06T14:59:47.754280"
+  }
+}

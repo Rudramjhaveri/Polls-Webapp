@@ -1,0 +1,38 @@
+{
+  "ea45d574-0a54-4b4b-bc75-21ba723cedd1": {
+    "question": "What is your favorite programming language?",
+    "options": [
+      "Python",
+      "JavaScript",
+      "Java",
+      "C++",
+      "Go"
+    ],
+    "votes": [
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "created_at": "2025-06-06T14:14:43.544070"
+  },
+  "494a192e-0941-4b3a-a2c9-7670ca621881": {
+    "question": "which is your fav colour?",
+    "options": [
+      "blue",
+      "green",
+      "yellow",
+      "orange",
+      "white"
+    ],
+    "votes": [
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "created_at": "2025-06-06T14:33:41.588050"
+  }
+}
